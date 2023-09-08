@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="TemplateMo">
+        <link rel="icon" href="images/logo_Dyis.svg" type="image/png">
+        <title>DYIS</title>
+
+        <!-- CSS FILES -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <link href="css/magnific-popup.css" rel="stylesheet">
+        <link href="css/development-style.css" rel="stylesheet">
+        
+        <!-- fancybox -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+        <!-- processing script -->
+        <script src="js/processing_avatar.js"></script>
+        
+    </head>
+    
+    <body>
+
+        <section class="preloader">
+            <div class="spinner">
+                <span class="spinner-rotate"></span>    
+            </div>
+        </section>
+
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <a href="index.html" class="navbar-brand mx-auto mx-lg-0">
+                    <img src="images/logo_Dyis.svg" class="avatar-image-extralarge svg-blue" alt="">
+
+                </a>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav"> <!--additional class: ms-lg-5-->
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll active" href="development.html">Development</a>
+                        </li>
+
+
+
+
+
+         
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </nav>
+
+        <main>
+
+            
+            <section class="projects section-padding" >
+                <div class="container">
+                    <div class="row">
+
+                        <div class="section-title-container"> <!-- ms-auto, col-lg-8 col-md-8 col-12 -->
+                            <div class="align-items-center mb-4"> <!-- justify-content-center, section-title-wrap d-flex -->
+                                <h2 class="section-title text-primary mb-0">Avatar Game</h2>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+
+                    </div>
+
+                    <div class="row mb-5 col-lg-6 col-12">
+                                
+                    </div>
+
+                                                <script type="text/processing">
+PFont f;
+int rand;
+int bubbleX, bubbleY;
+int triX1, triX2, triX3, triY1, triY2, triY3;
+int faceX, faceY;
+int arRecX, arRecY;
+int arTriX1,arTriX2,arTriX3,arTriY1,arTriY2,arTriY3;
+int rEyeX1, rEyeX2, rEyeY1, rEyeY2;
+int lEyeX1, lEyeX2, lEyeY1, lEyeY2;
+int lEarX, lEarY;
+int rEarX, rEarY;
+boolean move, breakFree, pressedF, restartAll;
+boolean flashBlack;
+int xTravel, yTravel;
+int diceCount;
+int[] diceRolled = new int[21];
+float orangeRectangleX;
+int textCardCenter;
+boolean over20;
+
+void setup() {
+  size(600,900); //this sets the size
+  background(180, 230, 247);//for the sky
+  f = createFont("Calibri",12,false);//step1 for displaying text = creating font
+  //initialize all shape variables
+  bubbleX = width/2;
+  bubbleY = 830;
+  triX1 = 257;
+  triY1=  840;
+  triX2=  300;
+  triY2=  895;
+  triX3=  343;
+  triY3=  840;
+  faceX=300;
+  faceY=830;  
+  arRecX=300;
+  arRecY=812;
+  arTriX1=288;
+  arTriY1=816;
+  arTriX2=300;
+  arTriY2=835;
+  arTriX3=312;
+  arTriY3=816;
+  rEyeX1 = 284;
+  rEyeX2 = 288;
+  rEyeY1 = 825;  
+  rEyeY2 = 825;
+  lEyeX1 = 311;
+  lEyeX2 = 315;
+  lEyeY1 = 825;
+  lEyeY2 = 825;
+  lEarX  = 275;  
+  lEarY  = 827;
+  rEarX  = 325;
+  rEarY  = 827;
+  
+  move =false;
+  breakFree = false;
+  pressedF = false;
+  restartAll = false;
+  flashBlack = false;
+  xTravel=5;
+  yTravel=5;
+  diceCount=0;
+  orangeRectangleX=0;
+  textCardCenter = 15;
+  over20=false;
+}
+
+void draw() {
+  
+  if (diceCount>=20) {
+        over20=true;
+   }
+   
+  if (over20==false) {
+    rectCover(false);
+    
+    //ICEBERG
+    if (pressedF==false) {
+      drawIceberg();
+    }
+    //AVATAR
+    //avatar random zigzag movement
+    if (pressedF==true) {
+      randomZigZag();
+    }
+    
+    //bubble
+    if (pressedF==false) {
+      drawBubble(false,bubbleX,bubbleY);
+    }
+    //triangle  
+    drawTriangle(triX1,triY1,triX2,triY2,triX3,triY3); 
+   
+    //FACE  
+    if (breakFree==false) {
+      drawFace(false,faceX,faceY);
+    }
+    else {
+      drawFace(true,faceX,faceY);
+    }
+    
+    //arrow
+    if (breakFree==false) {
+      drawArrow(false,arRecX,arRecY,arTriX1,arTriY1,arTriX2,arTriY2,arTriX3,arTriY3);
+    }
+    else {
+      drawArrow(true,arRecX,arRecY,arTriX1,arTriY1,arTriX2,arTriY2,arTriX3,arTriY3);
+    }  
+    
+    //eyes
+    if (breakFree==false) {
+      drawEyes(false,rEyeX1,rEyeY1,rEyeX2,rEyeY2,lEyeX1,lEyeY1,lEyeX2,lEyeY2);
+    }
+    else {
+      drawEyes(true,rEyeX1,rEyeY1,rEyeX2,rEyeY2,lEyeX1,lEyeY1,lEyeX2,lEyeY2);
+    }  
+    
+    //ears  
+    if (breakFree==false) {
+      drawEars(false,lEarX,lEarY,rEarX,rEarY);
+    }
+    else {
+      drawEars(true,lEarX,lEarY,rEarX,rEarY);
+    }
+    
+    //mouth
+    if (breakFree==true && pressedF==true) {
+      drawMouth(faceX,faceY+15); 
+    }
+     
+    // dice  
+    if (breakFree==false && over20==false) {
+      drawDice();
+    }
+    
+    // rolledDice
+    if (breakFree==true && pressedF==false) {
+      rectCover(true);
+    }
+   
+   //dice flashing circles
+   if (breakFree==false && over20==false) {
+     flashCircle();
+     rollDice(rand);
+   }
+   
+    //avatar moving
+    avatarMoveBasedOnDice(rand,20,75,120);
+    //avatarMoveBasedOnDice(rand,10,10,10);
+    
+   
+   //BREAK FREE
+   if (bubbleY<=(height/4)) {
+     breakFree=true;
+   }
+    
+
+   
+     //TEXT
+    textFont(f,15);//step2 for displaying text = assigning font
+    fill(0);//step3 for displaying text = color of the text
+    textAlign(CENTER); //step4 for displaying text = text alignment
+    if (breakFree==false) {
+      text("Click on the dice to help free Aang from the iceberg",300,30+38); //step 5 outputting the text
+      text("You have rolled the dice "+diceCount+" times",300,50+38); //step 5 outputting the text
+    }
+    else {
+      if (pressedF==false) {
+        text("You were successful in freeing Aang with "+diceCount+" dice rolls.",300,30+38);
+        text("Press F to burst the air bubble",300,50+38); //step 5 outputting the text
+      }
+      else {
+        text("Aang is free!",300,30+38); //step 5 outputting the text
+        text("Press R to restart",300,50+38); //step 5 outputting the text
+      }
+      
+    }
+    
+  }
+  else {
+    darkSky();
+  }
+  
+  restartAllFunc();
+ 
+}  
+
+void mousePressed(){  
+  //DICE CLICKS
+  if(breakFree==false && over20==false) {
+    if ((mouseX>=40 && mouseX<=120) && (mouseY>=95 && mouseY<=175)) {
+      rand=(int)random(1,7);
+      move = true;
+      restartAll = false;
+      
+      //display rolled dice
+      diceRolled[diceCount]=rand;
+      displayRolledDice(diceCount);
+      diceCount++;
+
+
+    }
+
+    
+  }
+}
+
+
+void keyPressed() {
+  if (breakFree==true) {
+    if(key=='f' || key=='F') {
+      pressedF=true;
+    }
+    
+    if(pressedF==true){
+      if(key=='r' || key=='R') 
+        restartAll=true;
+      }
+    }
+   else if (over20==true) {
+      if(key=='a' || key=='A') {
+        restartAll=true;
+      }
+
+   }
+}
+
+void drawIceberg() {
+    fill(13, 195, 214);//cyan
+    noStroke();
+    rectMode(CORNER);
+    rect(0,225,600,675);
+    //call the pattern function
+    pattern();
+    //LINE
+    stroke(18, 81, 247);//deep blue
+    strokeWeight(5);
+    line(0,225,600,225);
+}
+
+  
+void pattern () {
+  float x,y;
+  stroke(0,200,200);
+  strokeWeight(3);
+  y=(height/4)+15;
+  float circleColor=200;
+  for (float row=y;row<=height;row++) { //row
+  x=20;
+  fill(0,circleColor,circleColor);
+        for (int circleCount=1; circleCount<=17; circleCount++) { //circles
+          ellipse(x,y,40,40);
+          x+=35;
+        }
+  
+    y+=20;
+    circleColor-=10;
+  }
+}
+
+
+void drawBubble(boolean pressedF,float bubbleX,float bubbleY) {
+  if (pressedF==false) {
+    fill(213,229,244);
+    ellipse(bubbleX,bubbleY,130,130);
+  }
+}
+
+void drawTriangle(float triX1,float triY1, float triX2, float triY2, float triX3, float triY3) {
+  fill(240,120,20);  
+  noStroke();
+  triangle(triX1,triY1,triX2,triY2,triX3,triY3);  
+}
+
+void drawFace(boolean breakFree, float faceX, float faceY) {
+  if (breakFree==false) {
+    fill(37,126,160);
+  }
+  else {
+    fill(240, 219, 161);
+  }
+  ellipse(faceX,faceY,50,55);  
+}
+
+void drawArrow(boolean breakFree, float arRecX, float arRecY, float arTriX1, float arTriY1, float arTriX2, float arTriY2,float arTriX3, float arTriY3) {
+  if (breakFree==false) {
+    fill(255);
+  }
+  else {
+    fill(94, 179, 212);
+  }  
+  rectMode(CENTER);
+  rect(arRecX,arRecY,10,20);
+  triangle(arTriX1,arTriY1,arTriX2,arTriY2,arTriX3,arTriY3);  
+}
+
+void drawEyes (boolean breakFree, float rightEyeX1, float rightEyeY1, float rightEyeX2,float rightEyeY2, float leftEyeX1,float leftEyeY1,float leftEyeX2,float leftEyeY2) {
+  if (breakFree==false) {
+    stroke(255);
+  }
+  else {
+    stroke(0);
+  }  
+  strokeWeight(2.5);
+  line(rightEyeX1,rightEyeY1,rightEyeX2,rightEyeY2);  
+  line(leftEyeX1,leftEyeY1,leftEyeX2,leftEyeY2);
+}
+
+void drawEars (boolean breakFree, float leftEarX, float leftEarY, float rightEarX, float rightEarY) {
+  noStroke();
+  if (breakFree==false) {
+    fill(37,126,160);
+  }
+  else {
+    fill(240, 219, 161);
+  }
+  
+  ellipse(leftEarX,leftEarY,5,13); //left
+  ellipse(rightEarX,rightEarY,5,13);//right
+}
+
+void drawMouth (float x, float y) {
+    fill(255);
+    stroke(0);
+    strokeWeight(1);
+    ellipse(x,y,15,5);
+}
+
+void drawDice() {
+    strokeWeight(3);
+    stroke(23,75,174);  
+    fill(131,166,240);
+    rectMode(CENTER);
+    rect(80,140,80,80,10);
+}
+
+void flashCircle() {
+  if (flashBlack==false) {
+     fill(255);
+     flashBlack=true;
+   }
+   else {
+     fill(0);
+     flashBlack=false;
+   }
+}
+
+void rollDice (float rand) {
+    strokeWeight(3);
+    stroke(23,75,174); 
+    if (rand==1) {
+      ellipse(80,90+48,10,10);
+    }
+    else if (rand==2){
+      ellipse(65,110+48,10,10);
+      ellipse(95,75+48,10,10);
+    }
+    else if(rand==3){
+      ellipse(60,110+48,10,10);
+      ellipse(80,90+48,10,10);
+      ellipse(100,70+48,10,10);
+     }
+    else if(rand==4){
+      ellipse(60,70+48,10,10);
+      ellipse(99,70+48,10,10);
+      ellipse(60,110+48,10,10);
+      ellipse(99,110+48,10,10);
+    }
+    else if (rand==5) {
+      ellipse(60,70+48,10,10);  
+      ellipse(99,70+48,10,10);
+      ellipse(60,110+48,10,10);
+      ellipse(99,110+48,10,10);
+      ellipse(80,90+48,10,10);
+    }
+    else if (rand==6) {
+      ellipse(60,70+48,10,10);  
+      ellipse(100,70+48,10,10);
+      ellipse(60,90+48,10,10);
+      ellipse(100,90+48,10,10);
+      ellipse(60,110+48,10,10);
+      ellipse(100,110+48,10,10); 
+    }
+}
+
+void randomZigZag() {
+  //All X
+    triX1 +=xTravel;
+    triX2+=xTravel;
+    triX3+=xTravel;
+    faceX+=xTravel; 
+    arRecX+=xTravel;
+    arTriX1+=xTravel;
+    arTriX2+=xTravel;
+    arTriX3+=xTravel;
+    rEyeX1 +=xTravel;
+    rEyeX2 +=xTravel;
+    lEyeX1 +=xTravel;
+    lEyeX2 +=xTravel;
+    lEarX +=xTravel;
+    rEarX +=xTravel;
+    
+    //All Y
+    triY1+=yTravel;
+    triY2+=yTravel;
+    triY3+=yTravel;
+    faceY+=yTravel;
+    arRecY+=yTravel;
+    arTriY1+=yTravel;
+    arTriY2+=yTravel;
+    arTriY3+=yTravel;
+    rEyeY1+=yTravel;
+    rEyeY2+=yTravel;
+    lEyeY1+=yTravel;
+    lEyeY2+=yTravel;
+    lEarY+=yTravel;
+    rEarY+=yTravel;
+    
+    if (triX3>width || triX1<0){
+      xTravel *= -1;
+    }
+    if (triY2>height || (faceY-(55/2))<0) {
+      yTravel *= -1;
+    }
+    background(180, 230, 247);
+}
+
+void avatarMoveBasedOnDice(float random, float leftOrRightValue, float upValue1, float upValue2) {
+  if((random==1 || random==2) && move == true) {  
+    bubbleX +=leftOrRightValue;
+    triX1 +=leftOrRightValue;
+    triX2+=leftOrRightValue;
+    triX3+=leftOrRightValue;
+    faceX+=leftOrRightValue;  
+    arRecX+=leftOrRightValue;
+    arTriX1+=leftOrRightValue;
+    arTriX2+=leftOrRightValue;
+    arTriX3+=leftOrRightValue;
+    rEyeX1 +=leftOrRightValue;
+    rEyeX2 +=leftOrRightValue;
+    lEyeX1 +=leftOrRightValue;
+    lEyeX2 +=leftOrRightValue;
+    lEarX  +=leftOrRightValue;
+    rEarX  +=leftOrRightValue;
+    move = false;
+  }
+  else if ((random==3 || random==4) && move == true) {
+    bubbleX -=leftOrRightValue;
+    triX1 -=leftOrRightValue;
+    triX2-=leftOrRightValue;
+    triX3-=leftOrRightValue;
+    faceX-=leftOrRightValue;  
+    arRecX-=leftOrRightValue;
+    arTriX1-=leftOrRightValue;
+    arTriX2-=leftOrRightValue;
+    arTriX3-=leftOrRightValue;
+    rEyeX1 -=leftOrRightValue;
+    rEyeX2 -=leftOrRightValue;
+    lEyeX1 -=leftOrRightValue;
+    lEyeX2 -=leftOrRightValue;
+    lEarX  -=leftOrRightValue;
+    rEarX  -=leftOrRightValue;
+    move = false;
+  }
+  else if(random==5&& move ==true){
+    bubbleY -=upValue1;
+    triY1-=upValue1;
+    triY2-=upValue1;
+    triY3-=upValue1;
+    faceY-=upValue1;
+    arRecY-=upValue1;
+    arTriY1-=upValue1;
+    arTriY2-=upValue1;
+    arTriY3-=upValue1;
+    rEyeY1-=upValue1;
+    rEyeY2-=upValue1;
+    lEyeY1-=upValue1;
+    lEyeY2-=upValue1;
+    lEarY-=upValue1;
+    rEarY-=upValue1;
+    move = false;
+  }
+  else if(random==6 && move ==true){
+    bubbleY -=upValue2;
+    triY1-=upValue2;
+    triY2-=upValue2;
+    triY3-=upValue2;
+    faceY-=upValue2;
+    arRecY-=upValue2;
+    arTriY1-=upValue2;
+    arTriY2-=upValue2;
+    arTriY3-=upValue2;
+    rEyeY1-=upValue2;
+    rEyeY2-=upValue2;
+    lEyeY1-=upValue2;
+    lEyeY2-=upValue2;
+    lEarY-=upValue2;
+    rEarY-=upValue2;
+    move = false;
+  }
+}
+
+void rectCover(boolean over20) {
+  rectMode(CORNER);
+  noStroke();
+  fill(180, 230, 247);
+  if(over20==false) {
+    rect(0,40,width,height/4);
+  }
+  else {
+    rect(0,0,width,40);
+  }
+  
+}
+
+void displayRolledDice(int counter) {
+
+  stroke(0);
+  strokeWeight(1);
+  rectMode(CORNER);
+  fill(245, 194, 52);
+  rect(orangeRectangleX,0,30,35,10);
+  
+  textFont(f,12);//step2 for displaying text = assigning font
+  fill(0);//step3 for displaying text = color of the text
+  textAlign(CENTER); //step4 for displaying text = text alignment
+  text(diceRolled[counter],textCardCenter,20);
+  
+  orangeRectangleX+=30;
+  textCardCenter+=30;
+  
+}
+
+
+void darkSky() {
+  //sky
+    background(0);
+    
+    //stars
+    displayStars();
+    
+    //box
+    rectMode(CENTER);
+    stroke(18, 81, 247);//deep blue
+    strokeWeight(5);
+    fill(131, 166, 240);
+    rect(width/2,height/2,250,100);
+    
+    //text
+    textFont(f,15);//step2 for displaying text = assigning font
+    fill(0);//step3 for displaying text = color of the text
+    textAlign(CENTER); //step4 for displaying text = text alignment
+    text("Unsuccessful attempt :(",width/2,(height/2)-20);
+    text("Press A to try again",width/2,(height/2)+20);
+}
+
+void displayStars() {
+  float x, y;
+  boolean flickOn;
+  flickOn=false;
+  x=0;
+  y=0;
+  
+  for (int stars=1; stars<=6; stars++) {
+    x = random (0,width-1);
+    y = random (0, height-1);
+    stroke(18, 81, 247);//deep blue
+    strokeWeight(3);
+    if (flickOn==false){
+      fill(255);
+      flickOn=true;
+    }
+    else {
+      fill(0);
+      flickOn=false;
+    }
+    
+    ellipse(x,y,5,5);
+    x++;
+    y++;
+  } 
+}
+
+void restartAllFunc() {
+   //RESTART  
+   if (restartAll == true) {
+
+      bubbleX = width/2;
+      bubbleY = 830;
+      triX1 = 257;
+      triY1=  840;
+      triX2=  300;
+      triY2=  895;
+      triX3=  343;
+      triY3=  840;
+      faceX=300;
+      faceY=830;  
+      arRecX=300;
+      arRecY=812;
+      arTriX1=288;
+      arTriY1=816;
+      arTriX2=300;
+      arTriY2=835;
+      arTriX3=312;
+      arTriY3=816;
+      rEyeX1 = 284;
+      rEyeX2 = 288;
+      rEyeY1 = 825;  
+      rEyeY2 = 825;
+      lEyeX1 = 311;
+      lEyeX2 = 315;
+      lEyeY1 = 825;
+      lEyeY2 = 825;
+      lEarX  = 275;  
+      lEarY  = 827;
+      rEarX  = 325;
+      rEarY  = 827;
+      move =false;
+      breakFree = false;
+      pressedF = false;
+      rand=0;
+      
+      over20=false;
+      diceCount=0;
+      orangeRectangleX=0;
+      textCardCenter=15;
+      rectCover(true);
+      
+  
+   }
+}
+  
+                            </script>
+                            <canvas id="sketch" 
+                            style="border: 1px solid black;
+
+                            "></canvas>
+
+
+
+
+
+            </section>
+
+
+        </main>
+
+
+
+        <!-- JAVASCRIPT FILES -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.sticky.js"></script>
+        <!--<script src="js/click-scroll.js"></script>-->
+        <script src="js/jquery.magnific-popup.min.js"></script>
+        <script src="js/magnific-popup-options.js"></script>
+        <script src="js/custom.js"></script>
+        <!-- fancybox -->
+        <!--
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+        -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+        <!--animejs-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <script>
+            anime({
+                targets: '.tri1',
+                d: [
+                    {
+                        value: "M43,8V43H8V8H43m8-8H0V51H51V0Z"
+                    }
+                    ],
+                duration: 7000,
+                loop:true,
+                easing: "linear",
+                direction: 'alternate'
+            });
+
+
+        </script>
+
+
+    </body>
+</html>
